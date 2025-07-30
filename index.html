@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cybersecurity Training & Quiz</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+      body {
+        background-color: #0e7c7d;
+        font-family: "Futura", sans-serif;
+        color: white;
+      }
+      .card {
+        background-color: white;
+        color: black;
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        animation: fadeIn 0.8s ease-out;
+      }
+      input,
+      label,
+      legend {
+        color: black;
+      }
+      .fade-in {
+        animation: fadeIn 0.8s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .scale-hover:hover {
+        transform: scale(1.02);
+      }
+    </style>
+  </head>
+  <body class="p-6">
+    <div class="max-w-4xl mx-auto shadow-md rounded-lg p-6 card fade-in">
+      <h1 class="text-3xl font-bold mb-4 text-center">
+        Cybersecurity Training
+      </h1>
+      <h4 class="text-center">8.5.1L3WI0133, REV. 3</h4>
+
+      <div id="trainingSection">
+        <!-- 🎬 Training Video Clip -->
+        <div class="mb-6">
+          <video controls class="w-full rounded shadow">
+            <source src="training-clip.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <p class="mb-4">
+          Please review the following cybersecurity guidelines before beginning
+          the quiz:
+        </p>
+        <ul class="list-disc pl-6 space-y-2 text-gray-800">
+          <li>Use strong, unique passwords and a password manager.</li>
+          <li>
+            Enable multi-factor authentication (MFA) within 24 hours of account
+            creation.
+          </li>
+          <li>
+            Be alert for phishing emails. Don’t click on suspicious links.
+          </li>
+          <li>Install software updates immediately when prompted.</li>
+          <li>
+            Use secure internet practices—no personal cloud storage or social
+            media use on work devices.
+          </li>
+          <li>
+            Physically secure work devices and lock your screen when away.
+          </li>
+          <li>
+            Access only the data you need and use approved sharing methods.
+          </li>
+          <li>
+            Report incidents like phishing, malware, or lost devices immediately
+            to IT.
+          </li>
+          <li>Follow the same practices when working remotely.</li>
+          <li>Do not share work-related content on personal social media.</li>
+        </ul>
+        <div class="text-center mt-6">
+          <button
+            onclick="startQuiz()"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 scale-hover"
+          >
+            Start Quiz
+          </button>
+        </div>
+      </div>
+
+      <div id="quizSection" class="hidden fade-in">
+        <label class="block mb-4 mt-6">
+          <span class="text-gray-700">Employee Name:</span>
+          <input
+            type="text"
+            id="employeeName"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            required
+          />
+        </label>
+
+        <form id="quizForm"></form>
+
+        <div class="mt-6 text-center">
+          <button
+            type="button"
+            onclick="submitQuiz()"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 scale-hover"
+          >
+            Submit Quiz
+          </button>
+        </div>
+
+        <div id="result" class="mt-6 hidden text-center fade-in"></div>
+        <img id="logoImage" src="logo.png" style="display: none" />
+        <img
+          id="certificateTemplate"
+          src="certificate-template.jpg"
+          style="display: none"
+        />
+      </div>
+    </div>
+
+    <script>
+      const allQuestions = [
+        {
+          q: "Which of the following is not a requirement for work account passwords?",
+          options: [
+            "At least 12 characters",
+            "Include uppercase, lowercase, numbers, and special characters",
+            "Use the same password for multiple accounts",
+            "Use a company-approved password manager",
+          ],
+          answer: 2,
+        },
+        {
+          q: "How soon must MFA be enabled after account creation?",
+          options: ["12 hours", "24 hours", "48 hours", "72 hours"],
+          answer: 1,
+        },
+        {
+          q: "Best action if you receive a suspicious email?",
+          options: [
+            "Reply to verify identity",
+            "Click the link",
+            "Report it to IT security",
+            "Forward it to a coworker",
+          ],
+          answer: 2,
+        },
+        {
+          q: "Which is prohibited on work devices?",
+          options: [
+            "Accessing job-related social media",
+            "Downloading approved software",
+            "Using personal cloud storage",
+            "Verifying websites",
+          ],
+          answer: 2,
+        },
+        {
+          q: "Shortcut to lock a Windows workstation?",
+          options: ["Ctrl+Alt+Del", "Win+L", "Alt+F4", "Ctrl+Shift+L"],
+          answer: 1,
+        },
+        {
+          q: "What to do if you detect malware?",
+          options: [
+            "Fix it yourself",
+            "Reboot",
+            "Report & preserve evidence",
+            "Delete files",
+          ],
+          answer: 2,
+        },
+        {
+          q: "Remote work requirement?",
+          options: [
+            "Use public Wi-Fi",
+            "Use personal apps",
+            "Use company VPN",
+            "Share login with family",
+          ],
+          answer: 2,
+        },
+        {
+          q: "Social media policy requires employees to:",
+          options: [
+            "Share company news",
+            "Post on weekends",
+            "Keep company info private",
+            "Post IT warnings",
+          ],
+          answer: 2,
+        },
+      ];
+
+      function getRandomQuestions(n) {
+        return allQuestions.sort(() => 0.5 - Math.random()).slice(0, n);
+      }
+
+      function startQuiz() {
+        document.getElementById("trainingSection").classList.add("hidden");
+        document.getElementById("quizSection").classList.remove("hidden");
+        loadQuiz();
+      }
+
+      function loadQuiz() {
+        const quizForm = document.getElementById("quizForm");
+        quizForm.innerHTML = "";
+        const selectedQuestions = getRandomQuestions(5);
+        quizForm.dataset.questions = JSON.stringify(selectedQuestions);
+
+        selectedQuestions.forEach((q, i) => {
+          const fieldset = document.createElement("fieldset");
+          fieldset.className = "mb-4 fade-in";
+          fieldset.innerHTML =
+            `<legend class="font-medium mb-2">${i + 1}. ${q.q}</legend>` +
+            q.options
+              .map(
+                (opt, j) => `
+            <label class="block">
+              <input type="radio" name="q${i}" value="${j}" class="mr-2"> ${opt}
+            </label>`
+              )
+              .join("");
+          quizForm.appendChild(fieldset);
+        });
+      }
+
+      function submitQuiz() {
+        const name = document.getElementById("employeeName").value.trim();
+        if (!name) return alert("Please enter your name.");
+
+        const quizForm = document.getElementById("quizForm");
+        const questions = JSON.parse(quizForm.dataset.questions);
+        let score = 0;
+        let answers = [];
+
+        questions.forEach((q, i) => {
+          const selected = quizForm[`q${i}`].value;
+          const isCorrect = parseInt(selected) === q.answer;
+          if (isCorrect) score++;
+          answers.push({
+            question: q.q,
+            selected:
+              selected !== undefined ? q.options[selected] : "No answer",
+            correct: q.options[q.answer],
+            isCorrect,
+          });
+        });
+
+        const resultDiv = document.getElementById("result");
+        resultDiv.classList.remove("hidden");
+
+        const status = score >= 3 ? "PASSED" : "FAILED";
+        const statusColor = score >= 3 ? "text-green-600" : "text-red-600";
+
+        let html = `<h2 class="text-xl font-bold ${statusColor}">Score: ${score}/${questions.length} - ${status}</h2>`;
+        if (score >= 3) {
+          html += `<button onclick='generateCertificate("${name}", ${score}, ${JSON.stringify(
+            answers
+          )})' class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300 scale-hover">Download Certificate (PDF)</button>`;
+        }
+        resultDiv.innerHTML = html;
+      }
+
+      function generateCertificate(name, score, answers) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "landscape" });
+        const img = document.getElementById("certificateTemplate");
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        const certBG = canvas.toDataURL("image/jpeg");
+
+        doc.addImage(certBG, "JPEG", 0, 0, 297, 210);
+        doc.setFontSize(24);
+        doc.text(`${name}`, 148, 100, { align: "center" });
+        doc.setFontSize(14);
+        doc.text(`Has successfully passed the Cybersecurity Quiz`, 148, 115, {
+          align: "center",
+        });
+        doc.text(
+          `Score: ${score}/${
+            answers.length
+          } | Date: ${new Date().toLocaleDateString()}`,
+          148,
+          125,
+          { align: "center" }
+        );
+
+        doc.save(`${name.replace(/\s+/g, "_")}_Cybersecurity_Certificate.pdf`);
+      }
+    </script>
+  </body>
+</html>
